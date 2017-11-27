@@ -1,23 +1,30 @@
-"""This module is to open the tensorflow data"""
 import tensorflow as tf
 
-def _parse_function(example_proto):
-  features = {"video_id": tf.FixedLenFeature((), tf.string),
-              "start_time_seconds": tf.FixedLenFeature((), tf.float32),
-              "end_time_seconds": tf.FixedLenFeature((), tf.float32)
-              }
-  parsed_features = tf.parse_single_example(example_proto, features)
-  return parsed_features["video_id"], parsed_features["start_time_seconds"],  parsed_features["end_time_seconds"]
-
-
 def extract_data():
+    filenames = ["../features/bal_train/Xr.tfrecord"]
+    dataset = tf.data.TFRecordDataset(filenames)
+    dataset = dataset.map(parser)
+    iterator = dataset.make_one_shot_iterator()
+    next_element = iterator.get_next()
+
     sess = tf.Session()
-    """Function to extract the data form tfrecord"""
-    filename = "features/eval/00.tfrecord"
-    dataset = tf.data.TFRecordDataset(filename)
-    print(dataset)
-    dataset = dataset.map(_parse_function)
-    print(dataset)
-    ite = dataset.make_one_shot_iterator()
-    next_element = ite.get_next()
-    print(sess.run(next_element))
+    while True:
+        try:
+            print(sess.run(next_element))
+        except tf.errors.OutOfRangeError:
+            break
+
+def parser(sequence_example):
+    context_features = {
+            "video_id": tf.FixedLenFeature([], tf.string),
+            "labels": tf.VarLenFeature(tf.int64)
+            }
+    sequence_features = {
+            "audio_embedding": tf.FixedLenSequenceFeature([], tf.string)
+            }   
+    
+    contexts, sequences = tf.parse_single_sequence_example(sequence_example, context_features, sequence_features)
+    video_ids, labels = contexts["video_id"], tf.sparse_tensor_to_dense(contexts["labels"])
+    audio_features = tf.decode_raw(sequences["audio_embedding"], tf.uint8)
+
+    return video_ids, labels, audio_features
