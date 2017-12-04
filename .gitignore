@@ -106,3 +106,7 @@ ENV/
 
 .DS_Store
 features/*
+trainingFeatures/*
+generatedFeatures/*
+src/utils/vggish_model*
+src/utils/vggish_pca*
