@@ -16,19 +16,22 @@ def extract_example(filenames):
     return label, audio_features
 
 
-def extract_data():
-    filenames = ["./trainingFeatures/bal_train/Xr.tfrecord"]
+def extract_data(filenames):
     dataset = tf.data.TFRecordDataset(filenames)
     dataset = dataset.map(parser)
     iterator = dataset.make_one_shot_iterator()
     next_element = iterator.get_next()
     sess = tf.Session()
+    features = []
+    labels = []
     while True:
         try:
-            print(sess.run(next_element))
+            labels.append(sess.run(next_element[1]))
+            features.append(sess.run(next_element[2]))
         except tf.errors.OutOfRangeError:
             break
- 
+    return features, labels
+
 def parser(sequence_example):
     context_features = {
             "video_id": tf.FixedLenFeature([], tf.string),

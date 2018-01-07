@@ -102,4 +102,4 @@ if __name__ == "__main__":
     filenames = [path + f for f in listdir(path)]
 
     create_and_train_model(
-            filenames, [1280, 600, 600, 2], 1, 1000) 
+            filenames, [1280, 600, 300,  2], 1, 100) 
