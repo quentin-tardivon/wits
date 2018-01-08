@@ -8,7 +8,13 @@ run:
 	python3 src/main.py
 
 generate:
-	python3 ./src/generateFeatures.py --wav_file sounds/sound.wav \
-                                    --tfrecord_file generatedFeatures/sound.tfrecord \
+	python3 ./src/generateFeatures.py --wav_file sounds/music.wav \
+                                    --tfrecord_file generatedFeatures/music.tfrecord \
                                     --checkpoint src/utils/vggish_model.ckpt \
                                     --pca_params src/utils/vggish_pca_params.npz
+
+graph: run
+	tensorboard --logdir='/tmp/tflearn_logs'
+
+clean:
+	rm -rf /tmp/tflearn_logs

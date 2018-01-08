@@ -32,6 +32,20 @@ def extract_data(filenames):
             break
     return features, labels
 
+def extract_generated_data(filenames):
+    dataset = tf.data.TFRecordDataset(filenames)
+    dataset = dataset.map(parser_generated)
+    iterator = dataset.make_one_shot_iterator()
+    next_element = iterator.get_next()
+    sess = tf.Session()
+    features = []
+    while True:
+        try:
+            features.append(sess.run(next_element[0]))
+        except tf.errors.OutOfRangeError:
+            break
+    return features
+
 def parser(sequence_example):
     context_features = {
             "video_id": tf.FixedLenFeature([], tf.string),
@@ -45,3 +59,13 @@ def parser(sequence_example):
     video_ids, labels = contexts["video_id"], tf.sparse_tensor_to_dense(contexts["labels"])
     audio_features = tf.decode_raw(sequences["audio_embedding"], tf.uint8)
     return video_ids, labels, audio_features
+
+
+def parser_generated(sequence_example):
+    sequence_features = {
+            "audio_embedding": tf.FixedLenSequenceFeature([], tf.string)
+            }   
+     
+    sequences = tf.parse_single_sequence_example(sequence_example, sequence_features)
+    audio_features = tf.decode_raw(sequences["audio_embredding"], tf.uint8)
+    return audio_features
