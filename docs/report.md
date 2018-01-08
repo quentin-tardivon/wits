@@ -26,6 +26,8 @@ The final goal was to try to create a classifier able to tell apart acoustic eve
   ### 2. Creating new data
   In order to test the model, we wanted to create new data with the same data format as the Audioset project but with our own wav files. 
   For that we use the vggish model available on github and tweak it in order to work with our wav files.
+  We were able to successfully extract features from raw audio files, but we didn't use them for validation. We use the validation
+  set from the Audioset project to try to evaluate our model.
   ### 3. Learning phase
   We encounter a number of problems during this phase linked to Tensorflow and its documentation.
   We had difficulties creating a working tensoflow program adapted to the shape
@@ -36,7 +38,14 @@ The final goal was to try to create a classifier able to tell apart acoustic eve
   In the end, we used Tflearn, a high-level wrapper for Tensorflow which simplifies the creation of classifiers and computational graphs. 
   For the training, we use a simple fully connected deep neural network for the first tests. We try different batch sizes and epochs with Adam
   optimizer. We used Tensorboard to vizualize learning data. 
-  We were able to observe that the learning was non conclusive. With little training data our model overfit and was able to achieve an accuracy of 100%, but when we used many training examples our model learnt to always output false.
+  We were able to observe that the learning was non conclusive. With little training data our model overfit and was able to achieve an accuracy of 100%, but when we used many training examples our model learn to always output false.
+
+  A second run with different parameters show a level of validation increasing but the final test on the evaluation set keep 
+  its level around 46%. This result is not surprising with such a simplistic architecture and noisy data. 
+
+  We can see on the following figure an improvement on our model with a validation set of 30% of data. 
+  
+  ![fig](./figures/final_run.png)
 
 ## 3. Possible Improvements
 
@@ -48,3 +57,9 @@ to equilibrate the dataset to a rough 50/50 repartition. It also may be possible
 increase the number of class to reequilibrate the learning.
 
 ## 4. Conclusion
+With this project, we have been able to see different aspect of a machine learning problems:
+data acquisition and treatment, extracting data from binary formats, adapting the data to a model 
+structure and trying to find good parameters to improve the learning. 
+We conclude that we have seen too large for a first machine learning project and we spend more time trying to figure out
+problems linked to data than with the learning phase itself. However this project allowed us to see how Tensorflow 
+works and how to read the errors messages of this library.
