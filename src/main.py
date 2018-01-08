@@ -1,6 +1,7 @@
 import tensorflow as tf
 from classifier import BinaryClassifier
 from os import listdir
+import tflearn_classifier
 
 POSITIVE = [1, 0]
 NEGATIVE = [0, 1]
@@ -19,7 +20,7 @@ def main():
 
     classifier = BinaryClassifier(x, y, n_units)
 
-    path = "../features/bal_train/"
+    path = "./trainingFeatures/bal_train/"
     filenames = [path + f for f in listdir(path)]
     """filenames = [path + "ZZ.tfrecord",
                  path + "Zy.tfrecord",
@@ -32,7 +33,7 @@ def main():
                  path + "uu.tfrecord",
                  path + "uU.tfrecord"
                  ]"""
-    eval_path = "../features/eval/"
+    eval_path = "./trainingFeatures/eval/"
     eval_filenames = [path + f for f in listdir(path)]
 
     batch = tf.train.batch(
@@ -92,4 +93,5 @@ def extract_example(filenames):
     return labels, audio_features
 
 if __name__ == "__main__":
-    main()
+    #main()
+    tflearn_classifier.classify()

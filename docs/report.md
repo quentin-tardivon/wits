@@ -1,6 +1,6 @@
 # What is this Sound?
 ## Maynooth University - CS401 Project
-![image](./maynooth-logo.png)
+![image](./figures/maynooth-logo.png)
 
 ### Quentin Tardivon - 17182786
 ### Niko Karuhla - 

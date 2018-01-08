@@ -2,7 +2,7 @@ run:
 	python3 src/main.py
 
 install:
-	pip3 install numpy scipy resampy tensorflow six
+	pip3 install numpy scipy resampy tensorflow six tflearn
 	curl -O https://storage.googleapis.com/audioset/vggish_model.ckpt
 	curl -O https://storage.googleapis.com/audioset/vggish_pca_params.npz
 	mv vggish* src/utils/

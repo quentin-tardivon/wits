@@ -55,13 +55,13 @@ def classify():
     print(outputs)
     Y = outputs
     net = tflearn.input_data(shape=[None, 1280])
-    net = tflearn.fully_connected(net, 32)
-    net = tflearn.fully_connected(net, 32)
+    net = tflearn.fully_connected(net, 64)
+    net = tflearn.fully_connected(net, 64)
     net = tflearn.fully_connected(net, 2, activation='softmax')
     net = tflearn.regression(net)
     model = tflearn.DNN(net, tensorboard_verbose=3)
-    model.fit(X, Y, n_epoch=2,validation_set=0.3,
-             show_metric=True, batch_size=64, snapshot_step=10)
+    model.fit(X, Y, n_epoch=10,validation_set=0.3,
+             show_metric=True, batch_size=16)
     
     
     path = "./trainingFeatures/eval/"
