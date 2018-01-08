@@ -8,8 +8,8 @@ from os import listdir
 import tflearn
 def main():
     """Main function"""
-    #tflearn_classifier.classify()    
-    extract_test()
+    tflearn_classifier.classify()    
+    
 
 
 def extract_test():

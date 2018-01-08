@@ -33,7 +33,6 @@ def classify():
             for j in range(10):
                 for value in features[i][j]:
                     temp.append(value)
-                #temp.append(f)
             finalFeatures.append(np.array(temp))
             finalLabels.append(labels[i])
     
@@ -48,10 +47,12 @@ def classify():
     for labels in finalLabels:
         for label in labels:
             if label == 0:
-                outputs[0] = 1
+                outputs[i][0] = 1
+                break
             else:
-                outputs[1] = 1
+                outputs[i][1] = 1
         i += 1
+    print(outputs)
     Y = outputs
     net = tflearn.input_data(shape=[None, 1280])
     net = tflearn.fully_connected(net, 32)
@@ -62,15 +63,40 @@ def classify():
     model.fit(X, Y, n_epoch=2,validation_set=0.3,
              show_metric=True, batch_size=64, snapshot_step=10)
     
-    """
-    features = data.extract_data("../generatedFeatures/test.tfrecord")
+    
+    path = "./trainingFeatures/eval/"
+    filenames = [path + f for f in listdir(path)]
+    features, labels = data.extract_data(filenames)
+    finalFeatures = []
+    finalLabels = []
     for i in range(len(features)):
         temp = []
         if len(features[i]) >= 10:
             for j in range(10):
                 for value in features[i][j]:
                     temp.append(value)
-                #temp.append(f)
             finalFeatures.append(np.array(temp))
-    model.predict(finalFeatures)
-    """
+            finalLabels.append(labels[i])
+    i = 0
+    for labels in finalLabels:
+        for label in labels:
+            if label == 0:
+                outputs[i][0] = 1
+            else:
+                outputs[i][1] = 1
+        i += 1
+    predict = model.predict(finalFeatures)
+    for i in range(len(predict)):
+        if predict[i][0] > predict[i][1]:
+            predict[i][0] = 1
+            predict[i][1] = 0
+        else:
+            predict[i][1] = 0
+            predict[i][0] = 1
+    totalTrue = 0
+    total = 0
+    for i in range(len(predict)):
+        if (outputs[i][0] == predict[i][0]):
+            totalTrue += 1
+        total += 1
+    print(totalTrue/total)
